@@ -2,12 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Login XZET</title>
+  <title>Login XZET (Offline)</title>
   <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
@@ -16,14 +13,12 @@
       height: 100vh;
       overflow: hidden;
     }
-
     .center-screen {
       height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-
     .container {
       background: rgba(15, 15, 15, 0.85);
       padding: 40px 30px 70px;
@@ -34,7 +29,6 @@
       max-width: 600px;
       position: relative;
     }
-
     .input {
       display: block;
       width: 100%;
@@ -46,7 +40,6 @@
       color: white;
       font-size: 18px;
     }
-
     button {
       padding: 12px 24px;
       margin: 15px 8px;
@@ -59,22 +52,14 @@
       cursor: pointer;
       transition: 0.2s;
     }
-
-    button:hover {
-      background: #3f3f3f;
-    }
-
-    .hidden {
-      display: none;
-    }
-
+    button:hover { background: #3f3f3f; }
+    .hidden { display: none; }
     .logout-global {
       position: fixed;
       top: 15px;
       right: 15px;
       z-index: 999;
     }
-
     .global-buttons {
       position: fixed;
       bottom: 20px;
@@ -84,7 +69,6 @@
       gap: 10px;
       z-index: 998;
     }
-
     .marquee-wrapper {
       position: absolute;
       bottom: 15px;
@@ -95,7 +79,6 @@
       font-size: 16px;
       color: #ddd;
     }
-
     .success-text {
       font-size: 20px;
       line-height: 2;
@@ -104,18 +87,15 @@
 </head>
 <body>
 
-<!-- Logout Button -->
 <div class="logout-global hidden" id="logoutBtn">
   <button onclick="logout()">Logout</button>
 </div>
 
-<!-- Global Owner & Channel Buttons -->
 <div class="global-buttons hidden" id="globalLinks">
   <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
   <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
 </div>
 
-<!-- LOGIN PAGE -->
 <div class="center-screen" id="loginPage">
   <div class="container">
     <h2>🔐 Login ke XZET</h2>
@@ -126,7 +106,6 @@
   </div>
 </div>
 
-<!-- MENU PAGE -->
 <div class="center-screen hidden" id="menuPage">
   <div class="container">
     <h2>💥 Menu Bug WhatsApp</h2>
@@ -141,7 +120,6 @@
   </div>
 </div>
 
-<!-- SUCCESS PAGE -->
 <div class="center-screen hidden" id="successPage">
   <div class="container success-text">
     <div id="successContent"></div>
@@ -150,30 +128,24 @@
 </div>
 
 <script>
-  const RAW_GITHUB_USERS_JSON = "https://raw.githubusercontent.com/ZauzetGithab/Database/main/users.json";
+  const users = [
+    { username: "admin", password: "admin1933" },
+    { username: "test", password: "test1933" }
+  ];
 
-  async function login() {
+  function login() {
     const u = document.getElementById("username").value.trim();
     const p = document.getElementById("password").value.trim();
     const err = document.getElementById("errorMsg");
 
-    try {
-      const res = await fetch(RAW_GITHUB_USERS_JSON);
-      if (!res.ok) throw new Error("Gagal fetch");
-      const users = await res.json();
-
-      const found = users.find(user => user.username === u && user.password === p);
-
-      if (found) {
-        localStorage.setItem("loggedIn", "true");
-        showPage("menuPage");
-        document.getElementById("logoutBtn").classList.remove("hidden");
-        document.getElementById("globalLinks").classList.remove("hidden");
-      } else {
-        err.textContent = "❌ Username atau password salah!";
-      }
-    } catch (e) {
-      err.textContent = "❗ Gagal ambil data dari GitHub!";
+    const found = users.find(user => user.username === u && user.password === p);
+    if (found) {
+      localStorage.setItem("loggedIn", "true");
+      showPage("menuPage");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+      document.getElementById("globalLinks").classList.remove("hidden");
+    } else {
+      err.textContent = "❌ Username atau password salah!";
     }
   }
 
@@ -220,4 +192,4 @@
   }
 </script>
 </body>
-</html>
+  </html>
