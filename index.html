@@ -2,194 +2,142 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Login XZET (Offline)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BANCET</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
+      font-family: "Segoe UI", sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1578926287944-2213e1d9b2dd?auto=format&fit=crop&w=1950&q=80');
       background-size: cover;
+      background-position: center;
       color: white;
-      height: 100vh;
-      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      backdrop-filter: brightness(0.4) blur(2px);
     }
-    .center-screen {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      background: rgba(15, 15, 15, 0.85);
-      padding: 40px 30px 70px;
-      border-radius: 14px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    header {
+      background: rgba(0, 0, 0, 0.6);
       text-align: center;
-      width: 95%;
-      max-width: 600px;
-      position: relative;
+      padding: 30px 10px 10px;
     }
-    .input {
-      display: block;
-      width: 100%;
-      margin: 20px 0;
-      padding: 12px;
-      background: #1e1e1e;
+    header h1 {
+      font-size: 2.5em;
+      color: #00ffc8;
+      text-shadow: 0 0 10px #00ffc8;
+    }
+    .intro {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 0 20px 50px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .product {
+      background: rgba(0, 0, 0, 0.7);
       border: 1px solid #333;
-      border-radius: 6px;
-      color: white;
-      font-size: 18px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 12px #00ffc86e;
     }
-    button {
-      padding: 12px 24px;
-      margin: 15px 8px;
-      background: #2b3f5c;
-      color: white;
+    .product h2 {
+      color: #00ffc8;
+      margin-top: 0;
+      text-shadow: 0 0 5px #00ffc8;
+    }
+    .product ul {
+      list-style: none;
+      padding: 0;
+    }
+    .product ul li {
+      margin: 5px 0;
+      padding-left: 10px;
+    }
+    .buy-button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #00ffc8;
+      color: black;
+      text-decoration: none;
       font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s;
+      border-radius: 8px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00ffc8;
     }
-    button:hover { background: #3f3f3f; }
-    .hidden { display: none; }
-    .logout-global {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 999;
+    .buy-button:hover {
+      background-color: #00c6a6;
     }
-    .global-buttons {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 998;
-    }
-    .marquee-wrapper {
-      position: absolute;
-      bottom: 15px;
-      left: 0;
-      width: 100%;
+    footer {
       text-align: center;
-      font-weight: bold;
-      font-size: 16px;
-      color: #ddd;
-    }
-    .success-text {
-      font-size: 20px;
-      line-height: 2;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #ccc;
     }
   </style>
 </head>
 <body>
 
-<div class="logout-global hidden" id="logoutBtn">
-  <button onclick="logout()">Logout</button>
-</div>
+  <header>
+    <h1>BANCET</h1>
+  </header>
 
-<div class="global-buttons hidden" id="globalLinks">
-  <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
-  <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
-</div>
-
-<div class="center-screen" id="loginPage">
-  <div class="container">
-    <h2>🔐 Login ke XZET</h2>
-    <input id="username" class="input" type="text" placeholder="Username" />
-    <input id="password" class="input" type="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <p id="errorMsg" style="color: red; margin-top: 10px;"></p>
+  <div class="intro">
+    <p>Halo 👋</p>
+    <p>Saya Adalah <strong>Bancet</strong>, Saya Seorang Anak Yang Berasal Dari <strong>Bandung</strong>.<br>
+    Hobi Saya Adalah <strong>Berenang</strong> Dan <strong>Merusak System WhatsApp</strong>.</p>
   </div>
-</div>
 
-<div class="center-screen hidden" id="menuPage">
-  <div class="container">
-    <h2>💥 Menu Bug WhatsApp</h2>
-    <input id="target" class="input" type="text" placeholder="Masukkan nomor target 62xxxx" />
-    <button onclick="crash('iphone')">Crash iPhone</button>
-    <button onclick="crash('android')">Crash Android</button>
-    <div class="marquee-wrapper">
-      <marquee behavior="scroll" direction="left" scrollamount="4">
-        Thanks To : BancetMyself - And My God - And My Family
-      </marquee>
+  <div class="products">
+
+    <div class="product">
+      <h2>Script XzetVictus</h2>
+      <ul>
+        <li>📌 Price No Update: Rp35.000</li>
+        <li>📌 Price Full Update: Rp70.000</li>
+        <li>📌 Price Reseller: Rp100.000</li>
+        <li>📌 Price Partner: Rp150.000</li>
+        <li>📌 Price Moderator: Rp200.000</li>
+      </ul>
+      <a class="buy-button" href="https://t.me/BancetMyself" target="_blank">📩 Buy Klik Disini</a>
     </div>
+
+    <div class="product">
+      <h2>Partner Bancet</h2>
+      <p><strong>Harga:</strong> Rp80.000</p>
+      <ul>
+        <li>✅ Get Function Force Close App</li>
+        <li>✅ Get Function Delay Maker</li>
+        <li>✅ Get Learn Recode Script</li>
+        <li>✅ Get Admin Public Room Bancet</li>
+        <li>✅ Get Admin Channel Bancet</li>
+        <li>✅ Get Script Xzet Victus Full Update</li>
+        <li>✅ Promotion</li>
+        <li>✅ Get Base Telegram & WhatsApp</li>
+        <li>✅ Get Other Function</li>
+        <li>✅ Learn Create Script If I Not Busy!</li>
+      </ul>
+      <a class="buy-button" href="https://t.me/BancetMyself" target="_blank">📩 Join Partner Sekarang</a>
+    </div>
+
+    <div class="product">
+      <h2>📢 Channel Informasi</h2>
+      <p>Dapatkan semua update, tutorial, dan info penting seputar Bancet.</p>
+      <a class="buy-button" href="https://t.me/SecretMInformation" target="_blank">🔗 Kunjungi Channel</a>
+    </div>
+
   </div>
-</div>
 
-<div class="center-screen hidden" id="successPage">
-  <div class="container success-text">
-    <div id="successContent"></div>
-    <button onclick="showPage('menuPage')">🔙 Back to Menu</button>
-  </div>
-</div>
+  <footer>
+    &copy; 2025 BANCET. All Rights Reserved.
+  </footer>
 
-<script>
-  const users = [
-    { username: "admin", password: "admin1933" },
-    { username: "test", password: "test1933" }
-  ];
-
-  function login() {
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    const err = document.getElementById("errorMsg");
-
-    const found = users.find(user => user.username === u && user.password === p);
-    if (found) {
-      localStorage.setItem("loggedIn", "true");
-      showPage("menuPage");
-      document.getElementById("logoutBtn").classList.remove("hidden");
-      document.getElementById("globalLinks").classList.remove("hidden");
-    } else {
-      err.textContent = "❌ Username atau password salah!";
-    }
-  }
-
-  function logout() {
-    localStorage.removeItem("loggedIn");
-    location.reload();
-  }
-
-  function crash(type) {
-    const target = document.getElementById("target").value.trim();
-    if (!target.startsWith("62")) return alert("❗ Nomor harus diawali 62xxxx");
-
-    const today = new Date();
-    const tanggal = today.getDate();
-    const bulan = today.toLocaleString('id-ID', { month: 'long' });
-    const tahun = today.getFullYear();
-    const tanggalLengkap = `${tanggal} ${bulan} ${tahun}`;
-    const bugTypeText = type === "iphone" ? "Crash iPhone" : "Crash Android";
-
-    const html = `
-      ✅ <b>Success Attack Target</b><br/>
-      📱 <b>Target :</b> ${target}<br/>
-      🐞 <b>Bug Type :</b> ${bugTypeText}<br/>
-      📅 <b>Date :</b> ${tanggalLengkap}
-    `;
-
-    document.getElementById("successContent").innerHTML = html;
-    showPage("successPage");
-  }
-
-  function showPage(id) {
-    ["loginPage", "menuPage", "successPage"].forEach(i => {
-      document.getElementById(i).classList.add("hidden");
-    });
-    document.getElementById(id).classList.remove("hidden");
-  }
-
-  window.onload = () => {
-    if (localStorage.getItem("loggedIn") === "true") {
-      showPage("menuPage");
-      document.getElementById("logoutBtn").classList.remove("hidden");
-      document.getElementById("globalLinks").classList.remove("hidden");
-    }
-  }
-</script>
 </body>
-  </html>
+</html>
