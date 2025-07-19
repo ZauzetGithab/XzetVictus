@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const REPO_OWNER = 'USERNAME_GITHUB_LO';
-  const REPO_NAME = 'REPO_NAMA_LO';
+  const REPO_OWNER = 'ZauzetGithab';
+  const REPO_NAME = 'XzetVictus';
   const FILE_PATH = 'users.json';
 
   try {
