@@ -2,63 +2,44 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Login Phantom</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      background: url("https://files.catbox.moe/0my149.jpg") no-repeat center center fixed;
-      background-size: cover;
-      height: 100vh; color: white;
-      display: flex; justify-content: center; align-items: center;
-    }
-    .container {
-      background: rgba(0,0,0,0.7);
-      padding: 30px 20px; border-radius: 12px;
-      text-align: center; width: 90%; max-width: 400px;
-    }
-    input {
-      width: 100%; margin: 10px 0; padding: 10px;
-      background: #1e1e1e; border: none; border-radius: 6px; color: white;
-    }
-    button {
-      padding: 10px 20px; margin-top: 10px;
-      background: #2b3f5c; color: white; border: none;
-      border-radius: 6px; cursor: pointer;
-    }
-    p#errorMsg { color: red; margin-top: 10px; }
-  </style>
+  <title>Login XZET</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h2>🔐 Login To Phantom</h2>
-    <input id="username" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
+    <h2>🔐 Login ke XZET</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
     <button onclick="login()">Login</button>
-    <p id="errorMsg"></p>
+    <p id="error" class="error"></p>
   </div>
 
   <script>
     async function login() {
-      const u = document.getElementById("username").value.trim();
-      const p = document.getElementById("password").value.trim();
-      const err = document.getElementById("errorMsg");
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error");
 
       try {
         const res = await fetch("/api/getUsers");
         const users = await res.json();
-        const today = new Date().toISOString().split("T")[0];
+        const user = users.find(u => u.username === username && u.password === password);
 
-        const found = users.find(x => x.username === u && x.password === p && x.expiresAt >= today);
-        if (found) {
-          localStorage.setItem("loggedIn", "true");
-          window.location.href = "dashboard.html";
-        } else {
-          const expired = users.find(x => x.username === u && x.password === p);
-          err.textContent = expired ? "⚠️ Akun expired!" : "❌ Username / Password salah!";
+        if (!user) {
+          error.textContent = "❌ Username atau Password salah!";
+          return;
         }
+
+        if (user.expired && new Date(user.expired) < new Date()) {
+          error.textContent = "⛔ Akun sudah expired!";
+          return;
+        }
+
+        localStorage.setItem("role", user.role);
+        localStorage.setItem("username", user.username);
+        window.location.href = "/dashboard.html";
       } catch {
-        err.textContent = "❗ Gagal ambil data user!";
+        error.textContent = "Gagal ambil data user!";
       }
     }
   </script>
