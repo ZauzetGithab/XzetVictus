@@ -1,159 +1,66 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BANCET</title>
+  <meta charset="UTF-8">
+  <title>Login XZET</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: "Segoe UI", sans-serif;
-      background-image: url('https://images.unsplash.com/photo-1578926287944-2213e1d9b2dd?auto=format&fit=crop&w=1950&q=80');
+      font-family: Arial, sans-serif;
+      background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      color: white;
-      margin: 0;
-      padding: 0;
-      backdrop-filter: brightness(0.4) blur(2px);
+      height: 100vh; color: white;
+      display: flex; justify-content: center; align-items: center;
     }
-    header {
-      background: rgba(0, 0, 0, 0.6);
-      text-align: center;
-      padding: 30px 10px 10px;
+    .container {
+      background: rgba(0,0,0,0.7);
+      padding: 30px 20px; border-radius: 12px;
+      text-align: center; width: 90%; max-width: 400px;
     }
-    header h1 {
-      font-size: 2.5em;
-      color: #00ffc8;
-      text-shadow: 0 0 10px #00ffc8;
+    input {
+      width: 100%; margin: 10px 0; padding: 10px;
+      background: #1e1e1e; border: none; border-radius: 6px; color: white;
     }
-    .intro {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      margin-bottom: 20px;
-      line-height: 1.6;
+    button {
+      padding: 10px 20px; margin-top: 10px;
+      background: #2b3f5c; color: white; border: none;
+      border-radius: 6px; cursor: pointer;
     }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      padding: 0 20px 50px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .product {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid #333;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 12px #00ffc86e;
-    }
-    .product h2 {
-      color: #00ffc8;
-      margin-top: 0;
-      text-shadow: 0 0 5px #00ffc8;
-    }
-    .product ul {
-      list-style: none;
-      padding: 0;
-    }
-    .product ul li {
-      margin: 5px 0;
-      padding-left: 10px;
-    }
-    .buy-button {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #00ffc8;
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      transition: 0.3s;
-      box-shadow: 0 0 10px #00ffc8;
-    }
-    .buy-button:hover {
-      background-color: #00c6a6;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #ccc;
-    }
-    a.partner-link {
-      color: #00ffc8;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a.partner-link:hover {
-      text-decoration: underline;
-    }
+    p#errorMsg { color: red; margin-top: 10px; }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>BANCET</h1>
-  </header>
-
-  <div class="intro">
-    <p>Halo 👋</p>
-    <p>Saya Adalah <strong>Bancet</strong>, Saya Seorang Anak Yang Berasal Dari <strong>Bandung</strong>.<br>
-    Hobi Saya Adalah <strong>Berenang</strong> Dan <strong>Merusak System WhatsApp</strong>.</p>
+  <div class="container">
+    <h2>🔐 Login ke XZET</h2>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="errorMsg"></p>
   </div>
 
-  <div class="products">
+  <script>
+    async function login() {
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value.trim();
+      const err = document.getElementById("errorMsg");
 
-    <div class="product">
-      <h2>Script XzetVictus</h2>
-      <ul>
-        <li>📌 Price No Update: Rp35.000</li>
-        <li>📌 Price Full Update: Rp70.000</li>
-        <li>📌 Price Reseller: Rp100.000</li>
-        <li>📌 Price Partner: Rp150.000</li>
-        <li>📌 Price Moderator: Rp200.000</li>
-      </ul>
-      <a class="buy-button" href="https://t.me/BancetMyself" target="_blank">📩 Buy Klik Disini</a>
-    </div>
+      try {
+        const res = await fetch("/api/getUsers");
+        const users = await res.json();
+        const today = new Date().toISOString().split("T")[0];
 
-    <div class="product">
-      <h2>Partner Bancet</h2>
-      <p><strong>Harga:</strong> Rp80.000</p>
-      <ul>
-        <li>✅ Get Function Force Close App</li>
-        <li>✅ Get Function Delay Maker</li>
-        <li>✅ Get Learn Recode Script</li>
-        <li>✅ Get Admin Public Room Bancet</li>
-        <li>✅ Get Admin Channel Bancet</li>
-        <li>✅ Get Script Xzet Victus Full Update</li>
-        <li>✅ Promotion</li>
-        <li>✅ Get Base Telegram & WhatsApp</li>
-        <li>✅ Get Other Function</li>
-        <li>✅ Learn Create Script If I Not Busy!</li>
-      </ul>
-      <a class="buy-button" href="https://t.me/BancetMyself" target="_blank">📩 Join Partner Sekarang</a>
-    </div>
-
-    <div class="product">
-      <h2>🤝 List Partner</h2>
-      <ul>
-        <li>👤 <a class="partner-link" href="https://t.me/sanz1288" target="_blank">Sanz</a></li>
-        <li>👤 <a class="partner-link" href="https://t.me/ZephST" target="_blank">Zephyr</a></li>
-      </ul>
-    </div>
-
-    <div class="product">
-      <h2>📢 Channel Informasi</h2>
-      <p>Dapatkan semua update, tutorial, dan info penting seputar Bancet.</p>
-      <a class="buy-button" href="https://t.me/SecretMInformation" target="_blank">🔗 Kunjungi Channel</a>
-    </div>
-
-  </div>
-
-  <footer>
-    &copy; 2025 BANCET. All Rights Reserved.
-  </footer>
-
+        const found = users.find(x => x.username === u && x.password === p && x.expiresAt >= today);
+        if (found) {
+          localStorage.setItem("loggedIn", "true");
+          window.location.href = "dashboard.html";
+        } else {
+          const expired = users.find(x => x.username === u && x.password === p);
+          err.textContent = expired ? "⚠️ Akun expired!" : "❌ Username / Password salah!";
+        }
+      } catch {
+        err.textContent = "❗ Gagal ambil data user!";
+      }
+    }
+  </script>
 </body>
-  </html>
+</html>
